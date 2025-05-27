@@ -36,4 +36,4 @@ A Flask microservice that fetches numbers from a third-party API, stores them in
 ```bash
 python app.py
 
-![Sample Output](/screenshot.png)
+![Sample Output](screenshot.png)
