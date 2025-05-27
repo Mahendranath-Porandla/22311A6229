@@ -1,7 +1,6 @@
-# Average Calculator Microservice
+# Stock Price Aggregation Microservice
 
-A Flask microservice that fetches numbers from a third-party API, stores them in a fixed-size window, and calculates their average.
-
+A Flask microservice that fetches stock price data from a test exchange API, caches it, and provides insights like average price and correlation between two stocks.
 
 **Prerequisites:**
 
@@ -49,14 +48,23 @@ A Flask microservice that fetches numbers from a third-party API, stores them in
 
 
 
-## API Endpoint
+## API Endpoints
 
-*   `GET /numbers/{number_id}`
-    *   `number_id`:
-        *   `p`: Prime numbers
-        *   `f`: Fibonacci numbers
-        *   `e`: Even numbers
-        *   `I`: Random numbers
+1.  **Average Stock Price**
+    *   **Method:** `GET`
+    *   **Route:** `/stocks/<ticker>?minutes=m&aggregation=average`
+        *   `<ticker>`: The stock ticker symbol (e.g., NVDA, AAPL).
+        *   `minutes=m`: The number of past minutes to consider for the price history.
+        *   `aggregation=average`: (Currently, only 'average' is supported).
+    *   **Example:** `http://localhost:9877/stocks/NVDA?minutes=30&aggregation=average`
+
+2.  **Stock Correlation**
+    *   **Method:** `GET`
+    *   **Route:** `/stockcorrelation?minutes=m&ticker=<TICKER1>&ticker=<TICKER2>`
+        *   `minutes=m`: The number of past minutes for the history.
+        *   `ticker=<TICKER1>`: The first stock ticker.
+        *   `ticker=<TICKER2>`: The second stock ticker (exactly two tickers required).
+    *   **Example:** `http://localhost:9877/stockcorrelation?minutes=50&ticker=NVDA&ticker=PYPL`
 
 ## Setup
 
@@ -70,18 +78,22 @@ A Flask microservice that fetches numbers from a third-party API, stores them in
     ```bash
     pip install -r requirements.txt
     ```
+    (Ensure `Flask`, `requests`, `python-dotenv`, `pytz` are in `requirements.txt`)
+
 4.  **Configure Environment:**
     Create a `.env` file in the root directory with the following content:
     ```env
-    BEARER_TOKEN="YOUR_FRESH_API_BEARER_TOKEN"
-    WINDOW_SIZE=10 # Optional, defaults to 10
+    STOCK_API_BEARER_TOKEN="YOUR_FRESH_BEARER_TOKEN_FOR_STOCK_EXCHANGE_API"
+    # WINDOW_SIZE is not used in this project, but other configs could go here.
     ```
-    Replace `"YOUR_FRESH_API_BEARER_TOKEN"` with a valid token for the test server. These tokens expire quickly.
+    Replace `"YOUR_FRESH_BEARER_TOKEN_FOR_STOCK_EXCHANGE_API"` with a **valid and recently generated Bearer token** for the test stock exchange API (`http://20.244.56.144/evaluation-service/...`). These tokens often expire very quickly.
 
 ## Running the Service
 
 ```bash
 python app.py
 ```
+
+
 
 ![Sample Output](screenshot.png)

@@ -10,7 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# --- Configuration ---
+#Configuration 
 WINDOW_SIZE = int(os.environ.get("WINDOW_SIZE", 10))
 BEARER_TOKEN = os.environ.get("BEARER_TOKEN")
 THIRD_PARTY_BASE_URL = os.environ.get("THIRD_PARTY_BASE_URL", "http://20.244.56.144/evaluation-service")
@@ -22,10 +22,8 @@ ID_MAP = {
     'I': 'rand'
 }
 
-# --- In-memory storage ---
 stored_numbers_deque = deque()
 stored_numbers_set = set()
-# -------------------------
 
 def fetch_numbers_from_third_party(number_type_id_code: str) -> list:
     """
@@ -104,7 +102,6 @@ def get_average_and_numbers(number_id: str):
     
     elapsed_time_ms = (time.monotonic() - request_processing_start_time) * 1000
     if elapsed_time_ms > 500:
-        # This warning indicates the service itself took too long, *not* just the external call.
         print(f"Warning: Service response for /numbers/{number_id} took {elapsed_time_ms:.2f} ms, exceeding 500ms limit.")
 
     return jsonify(response_data), 200
